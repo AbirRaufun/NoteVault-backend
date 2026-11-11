@@ -75,3 +75,15 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: "server error" });
   }
 };
+
+// GET /api/auth/me
+exports.me = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password").lean();
+    if (!user) return res.status(404).json({ message: "user not found" });
+    res.json(user);
+  } catch (err) {
+    console.error("me:", err);
+    res.status(500).json({ message: "server error" });
+  }
+};

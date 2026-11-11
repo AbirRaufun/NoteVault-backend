@@ -50,6 +50,22 @@ exports.listMyNotes = async (req, res) => {
   }
 };
 
+// GET /api/notes/:id
+exports.getNoteById = async (req, res) => {
+  try {
+    const note = await Note.findOne({
+      _id: req.params.id,
+      owner: req.user.id,
+    }).lean();
+
+    if (!note) return res.status(404).json({ message: "note not found" });
+    res.json(note);
+  } catch (err) {
+    console.error("getNoteById:", err);
+    res.status(500).json({ message: "server error" });
+  }
+};
+
 // PATCH /api/notes/:id
 exports.updateNote = async (req, res) => {
   try {

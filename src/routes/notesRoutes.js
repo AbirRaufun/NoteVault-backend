@@ -5,15 +5,16 @@ const {
   listMyNotes,
   updateNote,
   deleteNote,
+  getNoteById,
 } = require("../controllers/notesController");
 
 const router = express.Router();
 
-// All note routes require authentication
 router.use(protect);
 
 router.post("/", createNote);
 router.get("/", listMyNotes);
+router.get("/:id", getNoteById);
 router.patch("/:id", updateNote);
 router.delete("/:id", deleteNote);
 

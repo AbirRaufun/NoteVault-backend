@@ -4,9 +4,7 @@ const { createPost, postsByUser } = require("../controllers/postsController");
 
 const router = express.Router();
 
-router.use(protect);
-
-router.post("/", createPost);
+router.post("/", protect, createPost);
 router.get("/by-user/:id", postsByUser);
 
 module.exports = router;

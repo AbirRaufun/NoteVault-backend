@@ -28,6 +28,18 @@ exports.listUsers = async (req, res) => {
   }
 };
 
+// GET /api/admin/users/:id
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password").lean();
+    if (!user) return res.status(404).json({ message: "user not found" });
+    res.json(user);
+  } catch (err) {
+    console.error("getUserById:", err);
+    res.status(500).json({ message: "server error" });
+  }
+};
+
 // POST /api/admin/users
 exports.createUser = async (req, res) => {
   try {
@@ -94,7 +106,6 @@ exports.deleteUser = async (req, res) => {
     const deleted = await User.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ message: "user not found" });
 
-    // cascade: also delete this user's notes
     await Note.deleteMany({ owner: deleted._id });
 
     res.json({ message: "deleted", id: deleted._id });
