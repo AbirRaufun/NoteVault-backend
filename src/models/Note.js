@@ -15,4 +15,9 @@ const noteSchema = new mongoose.Schema(
 // filter) first, createdAt (sort) second. Reversing breaks the optimization.
 noteSchema.index({ owner: 1, createdAt: -1 });
 
+// Admin "list all notes, newest first" does NOT filter by owner, so the
+// compound { owner, createdAt } index cannot serve it. Needs its own
+// single-field index on createdAt.
+noteSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model("Note", noteSchema);
